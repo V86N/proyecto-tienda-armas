@@ -1,14 +1,15 @@
 
-const { Category, Product } = require("../models/index")
+const { Category, Product, Sequelize } = require("../models/index")
+const {Op} = Sequelize
 
 const CategoryController = {
   async create(req, res) {
     try {
       const category = await Category.create(req.body)
-      res.status(201).send({ message: "Categoria creada", category });
+      res.status(201).send({ message: "Category created", category });
     } catch (error) {
       console.error(error);
-      res.status(500).send({ message: "Ha habido un error", error });
+      res.status(500).send({ message: "There was a problem", error });
     }
   },
 
@@ -64,7 +65,23 @@ const CategoryController = {
       console.error(error);
       res.status(500).send({message: "There was a problem", error})
     }
-  }
+  },
+
+  async getByName(req,res){
+    try {
+      const category = await Category.findAll({
+        where:{
+          type:{
+            [Op.like]:`%${req.params.type}%`
+          }
+        }
+      })
+      res.send(category)
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "There was a problem", error });
+    }
+  },
 
 }
 

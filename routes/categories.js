@@ -6,7 +6,7 @@ router.post("/create", CategoryController.create)
 router.put("/id/:id", CategoryController.update)
 router.delete("/id/:id", CategoryController.delete)
 router.get("/getAll", CategoryController.getAll)
-router.get("/getById", CategoryController.getById)
-
+router.get("/id/:id", CategoryController.getById)
+router.get("/type/:type", CategoryController.getByName)
 
 module.exports = router
