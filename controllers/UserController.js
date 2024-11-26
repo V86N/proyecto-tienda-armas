@@ -1,4 +1,4 @@
-const {User, Token, Sequelize} = require("../models/index")
+const {User, Token, Sequelize, Order, Product} = require("../models/index")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const { jwt_secret } = require ("../config/config.json") ["development"]     
@@ -6,7 +6,8 @@ const { Op } = Sequelize
 
 const UserController = {
     async create(req,res){
-        try {
+        try {if(!req.body.password) return res.status(400).send("Your password must be completed")
+         
         req.body.password = await bcrypt.hash(req.body.password, 10)    
         const user = await User.create(req.body)
         res.status(201).send({message:"User created successfully", user})
@@ -41,8 +42,26 @@ const UserController = {
         }
         const token = jwt.sign({ id: user.id }, jwt_secret)
         Token.create ({ token, UserId: user.id })
-        res.send({message:"Successfully logged",user})
+        res.send({token,message:"Successfully logged",user})
       },
+    
+      async getInfo (req,res) {
+       try { 
+        const user = await User.findByPk (req.user.id,{
+          include: [{
+            model: Order,
+            //attributes: []
+            include: [{model: Product}]
+          }]
+
+        })
+        
+        res.send({ message: 'Here you have the info', user })
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({ message: 'There was a problem' })
+        }
+    },
 
       async logout(req, res) {
         try {
