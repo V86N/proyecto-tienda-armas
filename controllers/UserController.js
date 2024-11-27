@@ -36,7 +36,7 @@ const UserController = {
           return res.status(400).send({ message: "Incorrect email or password" });
         }
         const isMatch = await bcrypt.compare(req.body.password, user.password);
-        // const isMatch = await bcrypt.compare("quieromuchoamitia","$10$wzRkyjrV30ay3tgFr.k/6OJ8VhZdBhKTf9t/tIfU0MYhktoTzgK6G")
+        
         if (!isMatch) {
             return res.status(400).send({message: "Incorrect email or password"})
         }

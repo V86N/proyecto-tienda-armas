@@ -17,13 +17,13 @@ const authentication = async(req, res, next) => {
             }
         });
         if (!tokenFound) {
-            return res.status(401).send({ message: 'No estas autorizado' });
+            return res.status(401).send({ message: 'you are not authorizated' });
         }
         req.user = user;
         next();
     } catch (error) {
         console.log(error)
-        res.status(500).send({ error, message: 'Ha habido un problema con el token' })
+        res.status(500).send({ error, message: 'There was a problem with the token' })
     }
     
     
@@ -32,7 +32,7 @@ const isAdmin = async(req, res, next) => {
     const admins = ['admin','superadmin'];
     if (!admins.includes(req.user.role)) {
         return res.status(403).send({
-            message: 'No tienes permisos'
+            message: 'You are not allowed'
         });
     }
     next();
